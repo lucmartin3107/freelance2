@@ -1,20 +1,48 @@
-import express from "express";
-import config from "config"; 
-import log from "./logger";
-import connect from "./db/connect";
-import routes from "./routes"
+import express, { Request, Response } from "express";
+let bodyParser = require('body-parser');
+import config from "config";
+import responseTime from "response-time";
+import connect from "./utils/connect";
+import logger from "./utils/logger";
+import routes from "./routes";
+import deserializeUser from "./middleware/deserializeUser";
+import { restResponseTimeHistogram, startMetricsServer } from "./utils/metrics";
 
 
-const port = config.get("port") as number;
-const host = config.get("host") as string;
+const port = config.get<number>("port");
 
 const app = express();
+
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 
-app.listen(port, host, () =>{
-    log.info(`server listennng at http://${host}:${port} | bonne séance de dev !`);
+app.use(deserializeUser);
 
-    connect();
-    routes(app);
+app.use(
+  responseTime((req: Request, res: Response, time: number) => {
+    if (req?.route?.path) {
+      restResponseTimeHistogram.observe(
+        {
+          method: req.method,
+          route: req.route.path,
+          status_code: res.statusCode,
+        },
+        time * 1000
+      );
+    }
+  })
+);
+
+app.listen(port, async () => {
+  logger.info(`App is running at http://localhost:${port}`);
+
+  await connect();
+
+  routes(app);
+
+  startMetricsServer();
+
 });
