@@ -16,12 +16,25 @@ export async function createUserHandler(
     return res.status(409).send(e.message);
   }
 }
-export async function getUserHandler(
+export async function getAllUserHandler(
   req: Request,
   res: Response
 ) {
   const userId = req.params.userId;
   const user = await findAllUser();
+
+  if (!user) {
+    return res.sendStatus(404);
+  }
+
+  return res.send(user);
+}
+export async function getUserHandler(
+  req: Request<UpdateUserInput["params"]>,
+  res: Response
+) {
+  const userId = req.params.userId;
+  const user = await findUser({ userId });
 
   if (!user) {
     return res.sendStatus(404);
@@ -40,13 +53,9 @@ export async function deleteUsertHandler(
   const user = await findUser({ userId });
 
   if (!user) {
+
     return res.sendStatus(404);
   }
-
-  if (String(user) !== userId) {
-    return res.sendStatus(403);
-  }
-
   await deleteUser({ userId });
 
   return res.sendStatus(200);
@@ -66,10 +75,10 @@ export async function updateUserHandler(
     return res.sendStatus(404);
   }
 
-  if (String(user) !== userId) {
+  // if (String(user) !== userId) {
 
-    return res.sendStatus(403);
-  }
+  //   return res.sendStatus(403);
+  // }
 
   const updatedUser = await findAndUpdateUser({ userId }, update, {
     new: true,

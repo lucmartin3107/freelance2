@@ -10,7 +10,7 @@ import {
   getUserSessionsHandler,
   deleteSessionHandler,
 } from "./controller/session.controller";
-import { getUserHandler, createUserHandler, updateUserHandler, deleteUsertHandler } from "./controller/user.controller";
+import { getAllUserHandler,getUserHandler,  createUserHandler, updateUserHandler, deleteUsertHandler } from "./controller/user.controller";
 import requireUser from "./middleware/requireUser";
 import validateResource from "./middleware/validateResource";
 import {
@@ -19,7 +19,7 @@ import {
   getProductSchema,
   updateProductSchema,
 } from "./schema/product.schema";
-import { getUserSchema, updateUserSchema } from "./schema/user.schema";
+import { deleteUserSchema, updateUserSchema } from "./schema/user.schema";
 import { createSessionSchema } from "./schema/session.schema";
 import { createUserSchema } from "./schema/user.schema";
 
@@ -63,10 +63,13 @@ function routes(app: Express) {
   //  *        description: Bad request
   //  */
   app.post("/api/users", validateResource(createUserSchema), createUserHandler);
-
- 
+  
   app.get(
     "/api/users",
+    getAllUserHandler
+  );
+  app.get(
+    "/api/users/:userId",
     getUserHandler
   );
   app.put(
@@ -74,10 +77,9 @@ function routes(app: Express) {
     [requireUser, validateResource(updateUserSchema)],
     updateUserHandler
   );
- 
-
   app.delete(
     "/api/users/:userId",
+    [requireUser, validateResource(deleteUserSchema)],
     deleteUsertHandler
   );
  app.post(

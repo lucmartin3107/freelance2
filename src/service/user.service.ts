@@ -30,7 +30,7 @@ export async function validatePassword({
 
   if (!isValid) return false;
   
-  console.log(user);
+  
   return omit(user.toJSON(), "password");
 }
 

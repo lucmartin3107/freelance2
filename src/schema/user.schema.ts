@@ -109,7 +109,7 @@ export const getUserSchema = object({
 });
 
 export const updateUserSchema = object({
-  ...userSchema,
+ 
   ...params,
 });
 

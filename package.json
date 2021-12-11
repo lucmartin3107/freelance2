@@ -32,6 +32,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/config": "^0.0.40",
     "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.6",
     "zod": "^3.11.6"
   }
 }

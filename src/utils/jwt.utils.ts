@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import config from "config";
 
+
 export function signJwt(
   object: Object,
   keyName: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
@@ -10,10 +11,9 @@ export function signJwt(
     config.get<string>(keyName),
     "base64"
   ).toString("ascii");
-
   return jwt.sign(object, signingKey, {
     ...(options && options),
-    algorithm: "RS256",
+    algorithm: 'RS256',
   });
 }
 
