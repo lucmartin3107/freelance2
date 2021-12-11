@@ -4,9 +4,22 @@ import config from "config";
 
 export interface UserInput {
   email: string;
-  name: string;
+  firstname: string;
+  lastname: string;
+  age: number;
+  major: number;
   password: string;
+  country: string;
+  city: string;
+  postcode: number;
+  additionnalInfo: string;
+  diploma: string[];
+  yearOfGraduation:  number;
+  school: string;
+  countryschool:string;
+
 }
+
 export interface UserDocument extends UserInput, mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
@@ -15,8 +28,21 @@ export interface UserDocument extends UserInput, mongoose.Document {
 const userSchema = new mongoose.Schema(
   {
     email: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: false },
+    age: { type: Number, required: false },
+    major: { type: Number, required: false },
     password: { type: String, required: true },
+    country: { type: String, required: false },
+    city: { type: String, required: false },
+    postcode: { type: Number, required: false },
+    additionnalInfo: { type: String, required: false },
+    diploma: { type: [String], required: false },
+    yearOfGraduation: { type: Number, required: true },
+    school: { type: String, required: false },
+    countryschool: { type: String, required: false },
+
+
   },
   {
     timestamps: true,

@@ -10,7 +10,7 @@ import {
   getUserSessionsHandler,
   deleteSessionHandler,
 } from "./controller/session.controller";
-import { createUserHandler } from "./controller/user.controller";
+import { getUserHandler, createUserHandler, updateUserHandler, deleteUsertHandler } from "./controller/user.controller";
 import requireUser from "./middleware/requireUser";
 import validateResource from "./middleware/validateResource";
 import {
@@ -19,6 +19,7 @@ import {
   getProductSchema,
   updateProductSchema,
 } from "./schema/product.schema";
+import { getUserSchema, updateUserSchema } from "./schema/user.schema";
 import { createSessionSchema } from "./schema/session.schema";
 import { createUserSchema } from "./schema/user.schema";
 
@@ -63,15 +64,30 @@ function routes(app: Express) {
   //  */
   app.post("/api/users", validateResource(createUserSchema), createUserHandler);
 
-  // app.post(
-  //   "/api/sessions",
-  //   validateResource(createSessionSchema),
-  //   createUserSessionHandler
-  // );
+ 
+  app.get(
+    "/api/users",
+    getUserHandler
+  );
+  app.put(
+    "/api/users/:userId",
+    [requireUser, validateResource(updateUserSchema)],
+    updateUserHandler
+  );
+ 
 
-  // app.get("/api/sessions", requireUser, getUserSessionsHandler);
+  app.delete(
+    "/api/users/:userId",
+    deleteUsertHandler
+  );
+ app.post(
+    "/api/sessions",
+    validateResource(createSessionSchema),
+    createUserSessionHandler
+  );
+  app.get("/api/sessions", requireUser, getUserSessionsHandler);
 
-  // app.delete("/api/sessions", requireUser, deleteSessionHandler);
+  app.delete("/api/sessions", requireUser, deleteSessionHandler);
 
   app.post(
     "/api/products",
@@ -101,23 +117,27 @@ function routes(app: Express) {
    *       404:
    *         description: Product not found
    */
-  app.put(
-    "/api/products/:productId",
-    [requireUser, validateResource(updateProductSchema)],
-    updateProductHandler
-  );
+  
 
   app.get(
     "/api/products/:productId",
     validateResource(getProductSchema),
     getProductHandler
   );
+  app.put(
+    "/api/products/:productId",
+    [requireUser, validateResource(updateProductSchema)],
+    updateProductHandler
+  );
+ 
 
   app.delete(
     "/api/products/:productId",
     [requireUser, validateResource(deleteProductSchema)],
     deleteProductHandler
   );
+  
+   
 }
 
 export default routes;

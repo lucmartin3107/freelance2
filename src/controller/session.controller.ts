@@ -13,7 +13,8 @@ export async function createUserSessionHandler(req: Request, res: Response) {
   }
 
   // create a session
-  const session = await createSession(user._id, req.get("user-agent") || "");
+  
+    const session = await createSession(user._id.toString(), req.get("user-agent") || "");
 
   // create an access token
 
@@ -31,7 +32,7 @@ export async function createUserSessionHandler(req: Request, res: Response) {
   );
 
   // return access & refresh tokens
-
+console.log(user);
   return res.send({ accessToken, refreshToken });
 }
 
