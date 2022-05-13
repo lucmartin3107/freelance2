@@ -1,3 +1,7 @@
+Technical test to freelance apply 
+
+Nodejs - Typesript - MongoDb
+
 ## Installation
 
 first install yarn with npm
